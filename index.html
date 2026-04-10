@@ -102,7 +102,7 @@
     <div class="modal">
       <span class="close" onclick="fecharLista()">✖</span>
 
-      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pubhtml?gid=924057020&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+      <iframe id="iframeLista" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pubhtml?gid=924057020&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
 
     </div>
   </div>
@@ -118,6 +118,10 @@
     }
 
     function abrirLista() {
+      const iframe = document.getElementById("iframeLista");
+    
+      iframe.src = iframe.src.split('?')[0] + '?t=' + new Date().getTime();
+    
       document.getElementById("overlayLista").style.display = "flex";
     }
 
