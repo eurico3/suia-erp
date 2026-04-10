@@ -32,7 +32,7 @@
       cursor: pointer;
     }
 
-    /* Modal */
+    /* Overlay (modal fundo) */
     .overlay {
       display: none;
       position: fixed;
@@ -45,12 +45,13 @@
       align-items: center;
     }
 
+    /* Caixa modal */
     .modal {
       background: white;
       padding: 20px;
       border-radius: 10px;
       width: 90%;
-      max-width: 800px;
+      max-width: 900px;
       position: relative;
     }
 
@@ -60,6 +61,7 @@
       border: none;
     }
 
+    /* Botão fechar */
     .close {
       position: absolute;
       top: 10px;
@@ -67,6 +69,7 @@
       font-size: 20px;
       cursor: pointer;
     }
+
   </style>
 </head>
 
@@ -78,14 +81,14 @@
 
     <button onclick="abrirForm()">Novo Aluno</button>
 
-    <button onclick="alert('Em breve')">Lista de Alunos</button>
+    <button onclick="abrirLista()">Lista de Alunos</button>
 
     <button onclick="alert('Em breve')">Marcar Presença</button>
 
   </div>
 
-  <!-- Modal -->
-  <div class="overlay" id="overlay">
+  <!-- MODAL NOVO ALUNO -->
+  <div class="overlay" id="overlayForm">
     <div class="modal">
       <span class="close" onclick="fecharForm()">✖</span>
 
@@ -94,15 +97,37 @@
     </div>
   </div>
 
+  <!-- MODAL LISTA DE ALUNOS -->
+  <div class="overlay" id="overlayLista">
+    <div class="modal">
+      <span class="close" onclick="fecharLista()">✖</span>
+
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pubhtml?gid=924057020&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+
+    </div>
+  </div>
+
   <script>
+
     function abrirForm() {
-      document.getElementById("overlay").style.display = "flex";
+      document.getElementById("overlayForm").style.display = "flex";
     }
 
     function fecharForm() {
-      document.getElementById("overlay").style.display = "none";
+      document.getElementById("overlayForm").style.display = "none";
     }
+
+    function abrirLista() {
+      document.getElementById("overlayLista").style.display = "flex";
+    }
+
+    function fecharLista() {
+      document.getElementById("overlayLista").style.display = "none";
+    }
+
   </script>
 
 </body>
 </html>
+
+
