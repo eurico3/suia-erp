@@ -69,29 +69,37 @@
 
     function carregarAlunosPresenca() {
     fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
-        .then(res => res.text())
+        .then(response => response.text())
         .then(data => {
-        const rows = data.split("\n").map(r => r.split(","));
-        const container = document.getElementById("listaAlunosPresenca");
+        const rows = data.split("\n").map(row => row.split(","));
 
+        const container = document.getElementById("listaAlunosPresenca");
         container.innerHTML = "";
 
-        // tirar header + ordenar por nome
-        const alunos = rows.slice(1).map(r => r[1]).sort();
+        // 👇 MESMA lógica da lista de alunos
+        const alunos = rows
+            .slice(1)
+            .map(row => row[1]) // coluna nome
+            .filter(nome => nome && nome.length > 0)
+            .sort();
 
         alunos.forEach(nome => {
-            if (nome) {
             const div = document.createElement("div");
+            div.className = "aluno-item";
 
-            div.innerHTML = `
-                <label>
-                <input type="checkbox" value="${nome}">
-                <span>${nome}</span>
-                </label>
-            `;
+        div.innerHTML = `
+        <span>${nome}</span>
+        <input type="checkbox" value="${nome}">
+        `;
+
+            div.onclick = function(e) {
+            if (e.target.tagName !== "INPUT") {
+                const checkbox = this.querySelector("input");
+                checkbox.checked = !checkbox.checked;
+            }
+            };
 
             container.appendChild(div);
-            }
         });
         });
     }
