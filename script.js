@@ -159,3 +159,55 @@
 
     fecharForm();
     }
+
+
+    function abrirRelatorio() {
+    document.getElementById("overlayRelatorio").style.display = "flex";
+    carregarRelatorio();
+    }
+
+    function fecharRelatorio() {
+    document.getElementById("overlayRelatorio").style.display = "none";
+    }
+
+    function carregarRelatorio() {
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MVh3khDwjUuR7GdX5oxB_UfDOE2PJ60YEJ8NHG0bWpwRadpHz2IPAVFVSsgWA67d3YBDFy_in5hD/pub?gid=1429041231&single=true&output=csv&t=" + new Date().getTime())
+        .then(res => res.text())
+        .then(data => {
+
+        const rows = data.split("\n").map(r => r.split(","));
+
+        const contagem = {};
+
+        rows.slice(1).forEach(row => {
+            const aluno = row[3]
+            ?.replace(/\r/g, "")      // remove carriage return
+            .trim()                   // remove espaços
+            .replace(/\s+/g, " ");    // normaliza espaços
+
+            if (aluno) {
+            if (!contagem[aluno]) {
+                contagem[aluno] = 0;
+            }
+            contagem[aluno]++;
+            }
+        });
+
+        const container = document.getElementById("relatorio");
+        container.innerHTML = "";
+
+        Object.keys(contagem)
+            .sort()
+            .forEach(nome => {
+            const div = document.createElement("div");
+            div.className = "aluno-item";
+
+            div.innerHTML = `
+                <span>${nome}</span>
+                <strong>${contagem[nome]} aulas</strong>
+            `;
+
+            container.appendChild(div);
+            });
+        });
+    }

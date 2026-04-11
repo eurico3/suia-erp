@@ -20,6 +20,8 @@
 
     <button onclick="abrirPresenca()">Marcar Presença</button>
 
+    <button onclick="abrirRelatorio()">Relatório</button>
+
   </div>
 
   <!-- MODAL NOVO ALUNO -->
@@ -64,6 +66,17 @@
     <div id="listaAlunosPresenca"></div>
 
     <button onclick="guardarPresenca()">Guardar Presença</button>
+  </div>
+  </div>
+
+  <!-- MODAL RELATÓRIO DE ALUNOS -->
+  <div class="overlay" id="overlayRelatorio">
+  <div class="modal">
+    <span class="close" onclick="fecharRelatorio()">×</span>
+    <h2>Relatório de Aulas</h2>
+
+    <div id="relatorio"></div>
+  </div>
   </div>
 
 </div>
