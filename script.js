@@ -39,8 +39,12 @@
     }
 
     function fecharForm() {
-      document.getElementById("overlayForm").style.display = "none";
-      location.reload();
+    document.getElementById("overlayForm").style.display = "none";
+
+    document.getElementById("nome").value = "";
+    document.getElementById("whatsapp").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("obs").value = "";
     }
 
     function abrirLista() {
@@ -82,7 +86,7 @@
             div.innerHTML = `
                 <label>
                 <input type="checkbox" value="${nome}">
-                ${nome}
+                <span>${nome}</span>
                 </label>
             `;
 

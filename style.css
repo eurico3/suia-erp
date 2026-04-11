@@ -104,13 +104,26 @@
     background-color: #fafafa;
     }
 
+    #listaAlunosPresenca div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    }
+
+    #listaAlunosPresenca div:hover {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    }
+
     #listaAlunosPresenca label {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px;
+    gap: 15px;
+    width: 100%;
     font-size: 18px;
-    border-bottom: 1px solid #eee;
     }
 
     #listaAlunosPresenca input[type="checkbox"] {
