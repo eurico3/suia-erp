@@ -11,7 +11,7 @@
       body.innerHTML = "";
 
       // Cabeçalho
-      rows[0].forEach(col => {
+      rows[0].slice(1).forEach(col => {
         const th = document.createElement("th");
         th.innerText = col;
         header.appendChild(th);
@@ -22,7 +22,7 @@
         if (row.length > 1) {
           const tr = document.createElement("tr");
 
-          row.forEach(col => {
+          row.slice(1).forEach(col => {
             const td = document.createElement("td");
             td.innerText = col;
             tr.appendChild(td);

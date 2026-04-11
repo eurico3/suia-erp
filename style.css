@@ -13,16 +13,22 @@
     }
 
     button {
-      display: block;
-      width: 250px;
-      margin: 15px auto;
-      padding: 15px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      background-color: black;
-      color: white;
-      cursor: pointer;
+    display: block;
+    width: 250px;
+    margin: 15px auto;
+    padding: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+    button:hover {
+    background-color: #333;
+    transform: scale(1.02);
     }
 
     /* Overlay (modal fundo) */
@@ -61,4 +67,37 @@
       right: 15px;
       font-size: 20px;
       cursor: pointer;
+    }
+
+    .table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  overflow-x: auto;
+}
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+
+    th {
+    background-color: black;
+    color: white;
+    padding: 14px;
+    text-align: left;
+    }
+
+    td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+    background-color: #f7f7f7;
+    }
+
+    tr:nth-child(even) {
+    background-color: #fafafa;
     }
