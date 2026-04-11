@@ -12,6 +12,13 @@
       margin-top: 40px;
     }
 
+    .logo {
+    display: block;
+    margin: 30px auto 10px auto;
+    max-width: 200px;
+    height: auto;
+    }
+
     button {
     display: block;
     width: 90%;
