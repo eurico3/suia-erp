@@ -51,3 +51,73 @@
     function fecharLista() {
       document.getElementById("overlayLista").style.display = "none";
     }
+
+    function abrirPresenca() {
+    document.getElementById("overlayPresenca").style.display = "flex";
+    carregarAlunosPresenca();
+    }
+
+    function fecharPresenca() {
+    document.getElementById("overlayPresenca").style.display = "none";
+    }
+
+
+
+    function carregarAlunosPresenca() {
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
+        .then(res => res.text())
+        .then(data => {
+        const rows = data.split("\n").map(r => r.split(","));
+        const container = document.getElementById("listaAlunosPresenca");
+
+        container.innerHTML = "";
+
+        // tirar header + ordenar por nome
+        const alunos = rows.slice(1).map(r => r[1]).sort();
+
+        alunos.forEach(nome => {
+            if (nome) {
+            const div = document.createElement("div");
+
+            div.innerHTML = `
+                <label>
+                <input type="checkbox" value="${nome}">
+                ${nome}
+                </label>
+            `;
+
+            container.appendChild(div);
+            }
+        });
+        });
+    }
+
+
+    function guardarPresenca() {
+    const checkboxes = document.querySelectorAll("#listaAlunosPresenca input:checked");
+
+    const data = new Date();
+
+    const dataFormatada = data.toISOString().split("T")[0];
+    const horaFormatada = data.toTimeString().slice(0,5);
+
+    checkboxes.forEach(cb => {
+        const nome = cb.value;
+
+        const url = "https://docs.google.com/forms/d/e/1FAIpQLSf5qKlT6T58AhTtbBfKnqhyYdxwj3fsrvozlUW8i0wCRBeVMQ/formResponse";
+
+        const formData = new FormData();
+        formData.append("entry.6897522", dataFormatada);
+        formData.append("entry.87385591", horaFormatada);
+        formData.append("entry.2044052258", nome);
+
+        fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+        });
+    });
+
+    alert("Presença guardada!");
+    fecharPresenca();
+    }
