@@ -25,10 +25,15 @@
   <!-- MODAL NOVO ALUNO -->
   <div class="overlay" id="overlayForm">
     <div class="modal">
-      <span class="close" onclick="fecharForm()">✖</span>
+      <span class="close" onclick="fecharForm()">×</span>
+      <h2>Novo Aluno</h2>
 
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScvsosVj5uN_l2rTX-cjRSCI_3WekK36uMNpEm1iBslcFaXYg/viewform?embedded=true" width="640" height="826" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+      <input type="text" id="nome" placeholder="Nome completo"><br><br>
+      <input type="text" id="whatsapp" placeholder="WhatsApp"><br><br>
+      <input type="email" id="email" placeholder="Email"><br><br>
+      <textarea id="obs" placeholder="Observações"></textarea><br><br>
 
+      <button onclick="guardarAluno()">Guardar</button>
     </div>
   </div>
 

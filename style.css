@@ -131,3 +131,16 @@
         padding: 15px;
     }
     }
+
+    input, textarea {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    }
+
+    textarea {
+    min-height: 80px;
+    }
