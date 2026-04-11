@@ -51,7 +51,3 @@
     function fecharLista() {
       document.getElementById("overlayLista").style.display = "none";
     }
-
-    function fecharLista2() {
-      document.getElementById("overlayLista").style.display = "none";
-    }
