@@ -243,6 +243,16 @@ function guardarCompra() {
     return;
   }
 
+  if (!peso) {
+    alert("Introduza o peso");
+    return;
+  }
+
+  if (!tipo) {
+    alert("Selecione o tipo de cerâmica");
+    return;
+  }
+
   const url = "https://docs.google.com/forms/d/e/1FAIpQLSdHdYkjM5vdycAyGry5_sy4Jr1p9tw-lYDbJ62P-7gX9KykRg/formResponse";
 
   const formData = new FormData();
@@ -260,7 +270,7 @@ function guardarCompra() {
     // 🔥 limpar campos
   document.getElementById("dataCompra").value = "";
   document.getElementById("alunoCompra").value = "";
-  document.getElementById("tipoCeramica").value = "Barro Vermelho";
+  document.getElementById("tipoCeramica").value = "";
   document.getElementById("peso").value = "";
 
   alert("Compra registada!");

@@ -20,9 +20,9 @@
 
     <button onclick="abrirPresenca()">Marcar Presença</button>
 
-    <button onclick="abrirRelatorio()">Relatório</button>
+        <button onclick="abrirCompras()">Compras de Cerâmica</button>
 
-    <button onclick="abrirCompras()">Registrar Cerâmica</button>
+    <button onclick="abrirRelatorio()">Relatório Presenças</button>
 
   </div>
 
@@ -99,10 +99,11 @@
     <select id="alunoCompra"></select>
 
     <select id="tipoCeramica">
-      <option>Barro Branco</option>
-      <option>Barro Vermelho</option>
-      <option>Grés</option>
-      <option>Porcelana</option>
+      <option value="" disabled selected>Selecionar tipo de cerâmica</option>
+      <option value="Barro Vermelho">Barro Vermelho</option>
+      <option value="Barro Branco">Barro Branco</option>
+      <option value="Grés">Grés</option>
+      <option value="Porcelana">Porcelana</option>
     </select><br><br>
 
     <input type="number" id="peso" placeholder="Peso (kg)"><br><br>
