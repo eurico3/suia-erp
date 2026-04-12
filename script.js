@@ -139,6 +139,7 @@
     const nome = document.getElementById("nome").value;
     const whatsapp = document.getElementById("whatsapp").value;
     const email = document.getElementById("email").value;
+    const turma = document.getElementById("turma").value;
     const obs = document.getElementById("obs").value;
 
     const url = "https://docs.google.com/forms/d/e/1FAIpQLScvsosVj5uN_l2rTX-cjRSCI_3WekK36uMNpEm1iBslcFaXYg/formResponse";
@@ -147,6 +148,7 @@
     formData.append("entry.1204402971", nome);
     formData.append("entry.729881715", whatsapp);
     formData.append("entry.385541780", email);
+    formData.append("entry.2086269672", turma);
     formData.append("entry.1350015782", obs);
 
     fetch(url, {
@@ -156,6 +158,13 @@
     });
 
     alert("Aluno cadastrado!");
+
+      // 🔥 LIMPAR CAMPOS
+    document.getElementById("nome").value = "";
+    document.getElementById("whatsapp").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("turma").value = "";
+    document.getElementById("obs").value = "";
 
     fecharForm();
     }
