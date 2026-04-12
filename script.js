@@ -309,3 +309,64 @@ function carregarAlunosDropdown() {
       });
     });
 }
+
+const precos = {
+  "Barro Vermelho": 5,
+  "Barro Branco": 6,
+  "Grés": 8,
+  "Porcelana": 10
+};
+
+
+function abrirRelatorioFinanceiro() {
+  document.getElementById("overlayFinanceiro").style.display = "flex";
+  carregarRelatorioFinanceiro();
+}
+
+function fecharRelatorioFinanceiro() {
+  document.getElementById("overlayFinanceiro").style.display = "none";
+}
+
+function carregarRelatorioFinanceiro() {
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRWjajYC5aS_6w70ercNuIHaTp-hecr8xB04VBKLFd0coGwDhRMWuMphWiXVWmpW_VOXd9Q6bt-JGJQ/pub?gid=727460563&single=true&output=csv&t=" + new Date().getTime())
+    .then(res => res.text())
+    .then(data => {
+
+      const rows = data.split("\n").map(r => r.split(","));
+
+      const totais = {};
+
+      rows.slice(1).forEach(row => {
+        const aluno = row[2]?.trim();
+        const tipo = row[3]?.trim();
+        const pesoGramas = parseFloat(row[4]);
+
+        if (!aluno || !tipo || !pesoGramas) return;
+
+        const pesoKg = pesoGramas / 1000;
+        const precoKg = precos[tipo] || 0;
+
+        const valor = pesoKg * precoKg;
+
+        if (!totais[aluno]) totais[aluno] = 0;
+        totais[aluno] += valor;
+      });
+
+      const container = document.getElementById("relatorioFinanceiro");
+      container.innerHTML = "";
+
+      Object.keys(totais)
+        .sort()
+        .forEach(nome => {
+          const div = document.createElement("div");
+          div.className = "aluno-item";
+
+          div.innerHTML = `
+            <span>${nome}</span>
+            <strong>€${totais[nome].toFixed(2)}</strong>
+          `;
+
+          container.appendChild(div);
+        });
+    });
+}

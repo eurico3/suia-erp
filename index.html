@@ -20,9 +20,11 @@
 
     <button onclick="abrirPresenca()">Marcar Presença</button>
 
-        <button onclick="abrirCompras()">Compras de Cerâmica</button>
+    <button onclick="abrirCompras()">Compras de Cerâmica</button>
 
     <button onclick="abrirRelatorio()">Relatório Presenças</button>
+
+    <button onclick="abrirRelatorioFinanceiro()">Relatório Financeiro</button>
 
   </div>
 
@@ -110,8 +112,17 @@
 
         <button onclick="guardarCompra()">Guardar</button>
   </div>
+  </div>
 
-</div>
+  <!-- MODAL RELATÓRIO FINANCEIRO -->
+  <div class="overlay" id="overlayFinanceiro">
+  <div class="modal">
+    <span class="close" onclick="fecharRelatorioFinanceiro()">×</span>
+    <h2>Relatório Financeiro</h2>
+
+    <div id="relatorioFinanceiro"></div>
+  </div>
+  </div>
 
 </div>
 
