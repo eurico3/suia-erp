@@ -237,6 +237,12 @@ function guardarCompra() {
   const peso = document.getElementById("peso").value;
   const data = document.getElementById("dataCompra").value;
 
+    // 🔴 VALIDAÇÃO AQUI
+  if (!aluno) {
+    alert("Selecione um aluno");
+    return;
+  }
+
   const url = "https://docs.google.com/forms/d/e/1FAIpQLSdHdYkjM5vdycAyGry5_sy4Jr1p9tw-lYDbJ62P-7gX9KykRg/formResponse";
 
   const formData = new FormData();
@@ -270,11 +276,20 @@ function carregarAlunosDropdown() {
       const select = document.getElementById("alunoCompra");
       select.innerHTML = "";
 
+      // 🔥 opção default
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Selecionar aluno";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      select.appendChild(defaultOption);
+
+      // 🔥 lista de alunos
       const alunos = rows
         .slice(1)
-        .map(r => r[1])
+        .map(r => r[1]?.trim())
         .filter(nome => nome)
-        .sort();
+        .sort((a, b) => a.localeCompare(b));
 
       alunos.forEach(nome => {
         const option = document.createElement("option");
