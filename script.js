@@ -1,222 +1,286 @@
-    function carregarAlunos() {
-  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
+function carregarAlunos() {
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
+  .then(response => response.text())
+  .then(data => {
+    const rows = data.split("\n").map(row => row.split(","));
+
+    const header = document.getElementById("header");
+    const body = document.getElementById("body");
+
+    header.innerHTML = "";
+    body.innerHTML = "";
+
+    // Cabeçalho
+    rows[0].slice(1).forEach(col => {
+      const th = document.createElement("th");
+      th.innerText = col;
+      header.appendChild(th);
+    });
+
+    // Dados
+    rows.slice(1).forEach(row => {
+      if (row.length > 1) {
+        const tr = document.createElement("tr");
+
+        row.slice(1).forEach(col => {
+          const td = document.createElement("td");
+          td.innerText = col;
+          tr.appendChild(td);
+        });
+
+        body.appendChild(tr);
+      }
+    });
+  });
+}
+
+function abrirForm() {
+  document.getElementById("overlayForm").style.display = "flex";
+}
+
+function fecharForm() {
+document.getElementById("overlayForm").style.display = "none";
+
+document.getElementById("nome").value = "";
+document.getElementById("whatsapp").value = "";
+document.getElementById("email").value = "";
+document.getElementById("obs").value = "";
+}
+
+function abrirLista() {
+  carregarAlunos();
+  document.getElementById("overlayLista").style.display = "flex";
+}
+
+function fecharLista() {
+  document.getElementById("overlayLista").style.display = "none";
+}
+
+function abrirPresenca() {
+document.getElementById("overlayPresenca").style.display = "flex";
+carregarAlunosPresenca();
+}
+
+function fecharPresenca() {
+document.getElementById("overlayPresenca").style.display = "none";
+}
+
+
+
+function carregarAlunosPresenca() {
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
     .then(response => response.text())
     .then(data => {
-      const rows = data.split("\n").map(row => row.split(","));
+    const rows = data.split("\n").map(row => row.split(","));
 
-      const header = document.getElementById("header");
-      const body = document.getElementById("body");
+    const container = document.getElementById("listaAlunosPresenca");
+    container.innerHTML = "";
 
-      header.innerHTML = "";
-      body.innerHTML = "";
+    // 👇 MESMA lógica da lista de alunos
+    const alunos = rows
+        .slice(1)
+        .map(row => row[1]) // coluna nome
+        .filter(nome => nome && nome.length > 0)
+        .sort();
 
-      // Cabeçalho
-      rows[0].slice(1).forEach(col => {
-        const th = document.createElement("th");
-        th.innerText = col;
-        header.appendChild(th);
-      });
+    alunos.forEach(nome => {
+        const div = document.createElement("div");
+        div.className = "aluno-item";
 
-      // Dados
-      rows.slice(1).forEach(row => {
-        if (row.length > 1) {
-          const tr = document.createElement("tr");
+    div.innerHTML = `
+    <span>${nome}</span>
+    <input type="checkbox" value="${nome}">
+    `;
 
-          row.slice(1).forEach(col => {
-            const td = document.createElement("td");
-            td.innerText = col;
-            tr.appendChild(td);
-          });
-
-          body.appendChild(tr);
+        div.onclick = function(e) {
+        if (e.target.tagName !== "INPUT") {
+            const checkbox = this.querySelector("input");
+            checkbox.checked = !checkbox.checked;
         }
-      });
+        };
+
+        container.appendChild(div);
+    });
     });
 }
 
-    function abrirForm() {
-      document.getElementById("overlayForm").style.display = "flex";
-    }
 
-    function fecharForm() {
-    document.getElementById("overlayForm").style.display = "none";
+function guardarPresenca() {
+const checkboxes = document.querySelectorAll("#listaAlunosPresenca input:checked");
 
-    document.getElementById("nome").value = "";
-    document.getElementById("whatsapp").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("obs").value = "";
-    }
+const data = new Date();
 
-    function abrirLista() {
-      carregarAlunos();
-      document.getElementById("overlayLista").style.display = "flex";
-    }
+const dataFormatada = data.toISOString().split("T")[0];
+const horaFormatada = data.toTimeString().slice(0,5);
 
-    function fecharLista() {
-      document.getElementById("overlayLista").style.display = "none";
-    }
+checkboxes.forEach(cb => {
+    const nome = cb.value;
 
-    function abrirPresenca() {
-    document.getElementById("overlayPresenca").style.display = "flex";
-    carregarAlunosPresenca();
-    }
-
-    function fecharPresenca() {
-    document.getElementById("overlayPresenca").style.display = "none";
-    }
-
-
-
-    function carregarAlunosPresenca() {
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
-        .then(response => response.text())
-        .then(data => {
-        const rows = data.split("\n").map(row => row.split(","));
-
-        const container = document.getElementById("listaAlunosPresenca");
-        container.innerHTML = "";
-
-        // 👇 MESMA lógica da lista de alunos
-        const alunos = rows
-            .slice(1)
-            .map(row => row[1]) // coluna nome
-            .filter(nome => nome && nome.length > 0)
-            .sort();
-
-        alunos.forEach(nome => {
-            const div = document.createElement("div");
-            div.className = "aluno-item";
-
-        div.innerHTML = `
-        <span>${nome}</span>
-        <input type="checkbox" value="${nome}">
-        `;
-
-            div.onclick = function(e) {
-            if (e.target.tagName !== "INPUT") {
-                const checkbox = this.querySelector("input");
-                checkbox.checked = !checkbox.checked;
-            }
-            };
-
-            container.appendChild(div);
-        });
-        });
-    }
-
-
-    function guardarPresenca() {
-    const checkboxes = document.querySelectorAll("#listaAlunosPresenca input:checked");
-
-    const data = new Date();
-
-    const dataFormatada = data.toISOString().split("T")[0];
-    const horaFormatada = data.toTimeString().slice(0,5);
-
-    checkboxes.forEach(cb => {
-        const nome = cb.value;
-
-        const url = "https://docs.google.com/forms/d/e/1FAIpQLSf5qKlT6T58AhTtbBfKnqhyYdxwj3fsrvozlUW8i0wCRBeVMQ/formResponse";
-
-        const formData = new FormData();
-        formData.append("entry.6897522", dataFormatada);
-        formData.append("entry.87385591", horaFormatada);
-        formData.append("entry.2044052258", nome);
-
-        fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        body: formData
-        });
-    });
-
-    alert("Presença guardada!");
-    fecharPresenca();
-    }
-
-
-    function guardarAluno() {
-    const nome = document.getElementById("nome").value;
-    const whatsapp = document.getElementById("whatsapp").value;
-    const email = document.getElementById("email").value;
-    const turma = document.getElementById("turma").value;
-    const obs = document.getElementById("obs").value;
-
-    const url = "https://docs.google.com/forms/d/e/1FAIpQLScvsosVj5uN_l2rTX-cjRSCI_3WekK36uMNpEm1iBslcFaXYg/formResponse";
+    const url = "https://docs.google.com/forms/d/e/1FAIpQLSf5qKlT6T58AhTtbBfKnqhyYdxwj3fsrvozlUW8i0wCRBeVMQ/formResponse";
 
     const formData = new FormData();
-    formData.append("entry.1204402971", nome);
-    formData.append("entry.729881715", whatsapp);
-    formData.append("entry.385541780", email);
-    formData.append("entry.2086269672", turma);
-    formData.append("entry.1350015782", obs);
+    formData.append("entry.6897522", dataFormatada);
+    formData.append("entry.87385591", horaFormatada);
+    formData.append("entry.2044052258", nome);
 
     fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        body: formData
+    method: "POST",
+    mode: "no-cors",
+    body: formData
+    });
+});
+
+alert("Presença guardada!");
+fecharPresenca();
+}
+
+
+function guardarAluno() {
+const nome = document.getElementById("nome").value;
+const whatsapp = document.getElementById("whatsapp").value;
+const email = document.getElementById("email").value;
+const turma = document.getElementById("turma").value;
+const obs = document.getElementById("obs").value;
+
+const url = "https://docs.google.com/forms/d/e/1FAIpQLScvsosVj5uN_l2rTX-cjRSCI_3WekK36uMNpEm1iBslcFaXYg/formResponse";
+
+const formData = new FormData();
+formData.append("entry.1204402971", nome);
+formData.append("entry.729881715", whatsapp);
+formData.append("entry.385541780", email);
+formData.append("entry.2086269672", turma);
+formData.append("entry.1350015782", obs);
+
+fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData
+});
+
+alert("Aluno cadastrado!");
+
+  // 🔥 LIMPAR CAMPOS
+document.getElementById("nome").value = "";
+document.getElementById("whatsapp").value = "";
+document.getElementById("email").value = "";
+document.getElementById("turma").value = "";
+document.getElementById("obs").value = "";
+
+fecharForm();
+}
+
+
+function abrirRelatorio() {
+document.getElementById("overlayRelatorio").style.display = "flex";
+carregarRelatorio();
+}
+
+function fecharRelatorio() {
+document.getElementById("overlayRelatorio").style.display = "none";
+}
+
+function carregarRelatorio() {
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MVh3khDwjUuR7GdX5oxB_UfDOE2PJ60YEJ8NHG0bWpwRadpHz2IPAVFVSsgWA67d3YBDFy_in5hD/pub?gid=1429041231&single=true&output=csv&t=" + new Date().getTime())
+    .then(res => res.text())
+    .then(data => {
+
+    const rows = data.split("\n").map(r => r.split(","));
+
+    const contagem = {};
+
+    rows.slice(1).forEach(row => {
+        const aluno = row[3]
+        ?.replace(/\r/g, "")      // remove carriage return
+        .trim()                   // remove espaços
+        .replace(/\s+/g, " ");    // normaliza espaços
+
+        if (aluno) {
+        if (!contagem[aluno]) {
+            contagem[aluno] = 0;
+        }
+        contagem[aluno]++;
+        }
     });
 
-    alert("Aluno cadastrado!");
+    const container = document.getElementById("relatorio");
+    container.innerHTML = "";
 
-      // 🔥 LIMPAR CAMPOS
-    document.getElementById("nome").value = "";
-    document.getElementById("whatsapp").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("turma").value = "";
-    document.getElementById("obs").value = "";
+    Object.keys(contagem)
+        .sort()
+        .forEach(nome => {
+        const div = document.createElement("div");
+        div.className = "aluno-item";
 
-    fecharForm();
-    }
+        div.innerHTML = `
+            <span>${nome}</span>
+            <strong>${contagem[nome]} aulas</strong>
+        `;
 
-
-    function abrirRelatorio() {
-    document.getElementById("overlayRelatorio").style.display = "flex";
-    carregarRelatorio();
-    }
-
-    function fecharRelatorio() {
-    document.getElementById("overlayRelatorio").style.display = "none";
-    }
-
-    function carregarRelatorio() {
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MVh3khDwjUuR7GdX5oxB_UfDOE2PJ60YEJ8NHG0bWpwRadpHz2IPAVFVSsgWA67d3YBDFy_in5hD/pub?gid=1429041231&single=true&output=csv&t=" + new Date().getTime())
-        .then(res => res.text())
-        .then(data => {
-
-        const rows = data.split("\n").map(r => r.split(","));
-
-        const contagem = {};
-
-        rows.slice(1).forEach(row => {
-            const aluno = row[3]
-            ?.replace(/\r/g, "")      // remove carriage return
-            .trim()                   // remove espaços
-            .replace(/\s+/g, " ");    // normaliza espaços
-
-            if (aluno) {
-            if (!contagem[aluno]) {
-                contagem[aluno] = 0;
-            }
-            contagem[aluno]++;
-            }
+        container.appendChild(div);
         });
+    });
+}
 
-        const container = document.getElementById("relatorio");
-        container.innerHTML = "";
+function abrirCompras() {
+  document.getElementById("overlayCompras").style.display = "flex";
+  carregarAlunosDropdown(); // 🔥 aqui
+}
 
-        Object.keys(contagem)
-            .sort()
-            .forEach(nome => {
-            const div = document.createElement("div");
-            div.className = "aluno-item";
+function fecharCompras() {
+  document.getElementById("overlayCompras").style.display = "none";
+}
 
-            div.innerHTML = `
-                <span>${nome}</span>
-                <strong>${contagem[nome]} aulas</strong>
-            `;
 
-            container.appendChild(div);
-            });
-        });
-    }
+function guardarCompra() {
+  const aluno = document.getElementById("alunoCompra").value;
+  const tipo = document.getElementById("tipoCeramica").value;
+  const peso = document.getElementById("peso").value;
+  const data = document.getElementById("dataCompra").value;
+
+  const url = "https://docs.google.com/forms/d/e/1FAIpQLSdHdYkjM5vdycAyGry5_sy4Jr1p9tw-lYDbJ62P-7gX9KykRg/formResponse";
+
+  const formData = new FormData();
+  formData.append("entry.1408765256", data);
+  formData.append("entry.312043259", aluno);
+  formData.append("entry.834368407", tipo);
+  formData.append("entry.1733717729", peso);
+
+  fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData
+  });
+
+    // 🔥 limpar campos
+  document.getElementById("dataCompra").value = "";
+  document.getElementById("alunoCompra").value = "";
+  document.getElementById("tipoCeramica").value = "Barro Vermelho";
+  document.getElementById("peso").value = "";
+
+  alert("Compra registada!");
+  fecharCompras();
+}
+
+function carregarAlunosDropdown() {
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
+    .then(res => res.text())
+    .then(data => {
+      const rows = data.split("\n").map(r => r.split(","));
+
+      const select = document.getElementById("alunoCompra");
+      select.innerHTML = "";
+
+      const alunos = rows
+        .slice(1)
+        .map(r => r[1])
+        .filter(nome => nome)
+        .sort();
+
+      alunos.forEach(nome => {
+        const option = document.createElement("option");
+        option.value = nome;
+        option.textContent = nome;
+        select.appendChild(option);
+      });
+    });
+}

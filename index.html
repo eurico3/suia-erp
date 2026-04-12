@@ -22,6 +22,8 @@
 
     <button onclick="abrirRelatorio()">Relatório</button>
 
+    <button onclick="abrirCompras()">Registrar Cerâmica</button>
+
   </div>
 
   <!-- MODAL NOVO ALUNO -->
@@ -85,6 +87,30 @@
     <div id="relatorio"></div>
   </div>
   </div>
+
+  <!-- MODAL COMPRA CERÂMICA -->
+  <div class="overlay" id="overlayCompras">
+  <div class="modal">
+    <span class="close" onclick="fecharCompras()">×</span>
+    <h2>Registrar Cerâmica</h2>
+    
+    <input type="date" id="dataCompra"><br><br>
+    
+    <select id="alunoCompra"></select>
+
+    <select id="tipoCeramica">
+      <option>Barro branco</option>
+      <option>Barro vermelho</option>
+      <option>Grés</option>
+      <option>Porcelana</option>
+    </select><br><br>
+
+    <input type="number" id="peso" placeholder="Peso (kg)"><br><br>
+
+        <button onclick="guardarCompra()">Guardar</button>
+  </div>
+
+</div>
 
 </div>
 
