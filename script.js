@@ -162,7 +162,6 @@
 
 
     function abrirRelatorio() {
-    alert("clicou"); // teste mobile
     document.getElementById("overlayRelatorio").style.display = "flex";
     carregarRelatorio();
     }
