@@ -363,7 +363,7 @@ function carregarRelatorioFinanceiro() {
 
           div.innerHTML = `
             <span>${nome}</span>
-            <strong>€${totais[nome].toFixed(2)}</strong>
+            <strong>R$ ${totais[nome].toFixed(2)}</strong>
           `;
 
           container.appendChild(div);
