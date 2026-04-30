@@ -370,3 +370,180 @@ function carregarRelatorioFinanceiro() {
         });
     });
 }
+
+function abrirCartela() {
+  document.getElementById("overlayCartela").style.display = "flex";
+  carregarAlunosDropdownCartela();
+}
+
+function fecharCartela() {
+  document.getElementById("overlayCartela").style.display = "none";
+}
+
+
+function carregarAlunosDropdownCartela() {
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=" + new Date().getTime())
+    .then(res => res.text())
+    .then(data => {
+      const rows = data.split("\n").map(r => r.split(","));
+
+      const select = document.getElementById("alunoCartela");
+      select.innerHTML = "";
+
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = "Selecionar aluno";
+      defaultOption.disabled = true;
+      defaultOption.selected = true;
+      select.appendChild(defaultOption);
+
+      const alunos = rows
+        .slice(1)
+        .map(r => r[1]?.trim())
+        .filter(nome => nome)
+        .sort();
+
+      alunos.forEach(nome => {
+        const option = document.createElement("option");
+        option.value = nome;
+        option.textContent = nome;
+        select.appendChild(option);
+      });
+    });
+}
+
+
+function guardarCartela() {
+  const data = document.getElementById("dataCartela").value;
+  const aluno = document.getElementById("alunoCartela").value;
+
+  if (!aluno) {
+    alert("Selecione um aluno");
+    return;
+  }
+
+  const url = "https://docs.google.com/forms/d/e/1FAIpQLSedwW3XEeK8QMd50pRMsB5cwY7YzMEIEJ1IvTwNNabNIfHjqw/formResponse";
+
+  const formData = new FormData();
+  formData.append("entry.182184715", data);
+  formData.append("entry.587151450", aluno);
+
+  fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    body: formData
+  });
+
+  alert("Cartela registada!");
+
+  // limpar
+  document.getElementById("dataCartela").value = "";
+  document.getElementById("alunoCartela").value = "";
+
+  fecharCartela();
+}
+
+
+function abrirVouchers() {
+  document.getElementById("overlayVouchers").style.display = "flex";
+  carregarVouchers();
+}
+
+function fecharVouchers() {
+  document.getElementById("overlayVouchers").style.display = "none";
+}
+
+
+function carregarVouchers() {
+
+  const urlPresencas = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MVh3khDwjUuR7GdX5oxB_UfDOE2PJ60YEJ8NHG0bWpwRadpHz2IPAVFVSsgWA67d3YBDFy_in5hD/pub?gid=1429041231&single=true&output=csv";
+  const urlCartelas = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGel0sWWnNu6SlQRgiMMVo4oE9sdRhHGyvB11p7_HmYBHCGTCfk974DLNcXw4HR30tGKR-GMMVpET4/pub?gid=1707649825&single=true&output=csv";
+
+  Promise.all([
+    fetch(urlPresencas).then(r => r.text()),
+    fetch(urlCartelas).then(r => r.text())
+  ]).then(([presencasData, cartelasData]) => {
+
+    const presencas = presencasData.split("\n").map(r => r.split(","));
+    const cartelas = cartelasData.split("\n").map(r => r.split(","));
+
+    const usadas = {};
+    const compradas = {};
+
+    // 🟢 CONTAR AULAS USADAS (presenças)
+    presencas.slice(1).forEach(row => {
+      const aluno = row[3]?.replace(/\r/g, "").trim();
+
+      if (!aluno) return;
+
+      if (!usadas[aluno]) usadas[aluno] = 0;
+      usadas[aluno]++;
+    });
+
+    // 🟢 CONTAR CARTELAS + VALIDADE
+    cartelas.slice(1).forEach(row => {
+      const dataCompra = row[1];
+      const aluno = row[2]?.replace(/\r/g, "").trim();
+
+      if (!aluno || !dataCompra) return;
+
+      const data = new Date(dataCompra);
+      const validade = new Date(data);
+      validade.setDate(validade.getDate() + 50);
+
+      if (!compradas[aluno]) {
+        compradas[aluno] = {
+          aulas: 0,
+          validade: validade
+        };
+      }
+
+      compradas[aluno].aulas += 4;
+
+      // mantém a validade mais recente
+      if (validade > compradas[aluno].validade) {
+        compradas[aluno].validade = validade;
+      }
+    });
+
+    const container = document.getElementById("relatorioVouchers");
+    container.innerHTML = "";
+
+    const alunos = new Set([
+      ...Object.keys(usadas),
+      ...Object.keys(compradas)
+    ]);
+
+    const hoje = new Date();
+
+    alunos.forEach(nome => {
+      const totalComprado = compradas[nome]?.aulas || 0;
+      const totalUsado = usadas[nome] || 0;
+      const saldo = totalComprado - totalUsado;
+
+      const validade = compradas[nome]?.validade;
+
+      let status = "";
+
+      if (validade) {
+        if (hoje > validade) {
+          status = "❌ Expirado";
+        } else {
+          status = "Expira em " + validade.toLocaleDateString("pt-BR");
+        }
+      }
+
+      const div = document.createElement("div");
+      div.className = "aluno-item";
+
+      div.innerHTML = `
+        <span>${nome}</span>
+        <strong>${saldo} aulas</strong>
+        <div style="font-size: 12px; color: gray;">${status}</div>
+      `;
+
+      container.appendChild(div);
+    });
+
+  });
+}

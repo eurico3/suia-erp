@@ -18,7 +18,11 @@
 
     <button onclick="abrirLista()">Lista de Alunos</button>
 
+    <button onclick="abrirCartela()">Nova Cartela</button>
+
     <button onclick="abrirPresenca()">Marcar Presença</button>
+
+    <button onclick="abrirVouchers()">Saldo de Vouchers</button>
 
     <button onclick="abrirCompras()">Compras de Cerâmica</button>
 
@@ -89,6 +93,31 @@
     <div id="relatorio"></div>
   </div>
   </div>
+  
+  <!-- MODAL CARTELA -->
+  <div class="overlay" id="overlayCartela">
+  <div class="modal">
+    <span class="close" onclick="fecharCartela()">×</span>
+    <h2>Nova Cartela</h2>
+
+    <input type="date" id="dataCartela"><br><br>
+
+    <select id="alunoCartela"></select><br><br>
+
+    <button onclick="guardarCartela()">Guardar</button>
+  </div>
+  </div>
+  
+  <!-- MODAL VOUCHERS -->
+  <div class="overlay" id="overlayVouchers">
+    <div class="modal">
+      <span class="close" onclick="fecharVouchers()">×</span>
+      <h2>Saldo de Vouchers</h2>
+
+      <div id="relatorioVouchers"></div>
+    </div>
+  </div>
+
 
   <!-- MODAL COMPRA CERÂMICA -->
   <div class="overlay" id="overlayCompras">
