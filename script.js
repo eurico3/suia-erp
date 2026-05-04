@@ -438,14 +438,16 @@ function guardarCartela() {
 
   alert("Cartela registada!");
 
-  emailjs.send("service_hhz5mvm", "template_9t8rspj", {
+emailjs.send("service_hhz5mvm", "template_9t8rspj", {
   nome: aluno,
-  saldo: 4, // por agora fixo
+  saldo: 4,
   validade: "60 dias",
-  email: "euricopaes@gmail.com",
-  }).then(function(response) {
+  to_email: "euricopaes@gmail.com"
+  })
+  .then(function(response) {
     console.log("Email enviado!", response.status, response.text);
-  }, function(error) {
+  })
+  .catch(function(error) {
     console.log("Erro ao enviar email:", error);
   });
 
