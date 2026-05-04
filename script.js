@@ -413,22 +413,31 @@ function carregarAlunosDropdownCartela() {
 }
 
 
-function guardarCartela() {
+async function guardarCartela() {
+
   const data = document.getElementById("dataCartela").value;
   const aluno = document.getElementById("alunoCartela").value;
 
-  const emailAluno = document.getElementById("email").value;
-
-  if (!aluno) {
-    alert("Selecione um aluno");
+  // 🔴 validação básica
+  if (!data || !aluno) {
+    alert("Preencha todos os campos!");
     return;
   }
 
+  // 🔍 buscar email na base
+  const emailAluno = await buscarEmailAluno(aluno);
+
+  if (!emailAluno) {
+    alert("Este aluno não tem email cadastrado!");
+    return;
+  }
+
+  // 📤 enviar para Google Forms (cartela)
   const url = "https://docs.google.com/forms/d/e/1FAIpQLSedwW3XEeK8QMd50pRMsB5cwY7YzMEIEJ1IvTwNNabNIfHjqw/formResponse";
 
   const formData = new FormData();
-  formData.append("entry.182184715", data);
-  formData.append("entry.587151450", aluno);
+  formData.append("entry.182184715", data);   // Data
+  formData.append("entry.587151450", aluno);  // Nome
 
   fetch(url, {
     method: "POST",
@@ -436,13 +445,12 @@ function guardarCartela() {
     body: formData
   });
 
-  alert("Cartela registada!");
-
-emailjs.send("service_hhz5mvm", "template_9t8rspj", {
-  nome: aluno,
-  saldo: 4,
-  validade: "60 dias",
-  to_email: "euricopaes@gmail.com"
+  // 📧 enviar email automático
+  emailjs.send("service_hhz5mvm", "template_9t8rspj", {
+    nome: aluno,
+    saldo: 4, // por enquanto fixo
+    validade: "60 dias", // por enquanto fixo
+    to_email: emailAluno
   })
   .then(function(response) {
     console.log("Email enviado!", response.status, response.text);
@@ -451,13 +459,36 @@ emailjs.send("service_hhz5mvm", "template_9t8rspj", {
     console.log("Erro ao enviar email:", error);
   });
 
+  alert("Cartela registrada e email enviado!");
 
-  // limpar
+    // limpar
   document.getElementById("dataCartela").value = "";
   document.getElementById("alunoCartela").value = "";
 
   fecharCartela();
 }
+
+
+async function buscarEmailAluno(nomeAluno) {
+  const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=";
+
+  const data = await fetch(url).then(r => r.text());
+  const rows = data.split("\n").map(r => r.split(","));
+
+  for (let i = 1; i < rows.length; i++) {
+    const nome = rows[i][1]?.trim();
+    const email = rows[i][3]?.trim();
+
+    if (nome === nomeAluno) {
+      return email;
+    }
+  }
+
+  return null;
+}
+
+
+
 
 
 function abrirVouchers() {
