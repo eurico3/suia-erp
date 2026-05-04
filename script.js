@@ -417,6 +417,8 @@ function guardarCartela() {
   const data = document.getElementById("dataCartela").value;
   const aluno = document.getElementById("alunoCartela").value;
 
+  const emailAluno = document.getElementById("email").value;
+
   if (!aluno) {
     alert("Selecione um aluno");
     return;
@@ -435,6 +437,18 @@ function guardarCartela() {
   });
 
   alert("Cartela registada!");
+
+  emailjs.send("service_hhz5mvm", "template_9t8rspj", {
+  nome: aluno,
+  saldo: 4, // por agora fixo
+  validade: "60 dias",
+  email: emailAluno
+  }).then(function(response) {
+    console.log("Email enviado!", response.status, response.text);
+  }, function(error) {
+    console.log("Erro ao enviar email:", error);
+  });
+
 
   // limpar
   document.getElementById("dataCartela").value = "";
