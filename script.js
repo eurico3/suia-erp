@@ -442,7 +442,7 @@ function guardarCartela() {
   nome: aluno,
   saldo: 4, // por agora fixo
   validade: "60 dias",
-  email: emailAluno
+  email: "euricopaes@gmail.com",
   }).then(function(response) {
     console.log("Email enviado!", response.status, response.text);
   }, function(error) {
