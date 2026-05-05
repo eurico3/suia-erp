@@ -197,3 +197,23 @@
   width: 28px;
   height: 28px;
 }
+
+@media (max-width: 600px) {
+
+  .aluno-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .linha-direita {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .saldo {
+    font-size: 15px;
+  }
+
+}
