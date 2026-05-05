@@ -418,6 +418,13 @@ async function guardarCartela() {
   const data = document.getElementById("dataCartela").value;
   const aluno = document.getElementById("alunoCartela").value;
 
+  const dados = await obterDadosAluno(aluno);
+
+  const saldo = dados.saldo;
+  const validade = dados.validade
+    ? dados.validade.toLocaleDateString("pt-BR")
+    : "—";
+
   // 🔴 validação básica
   if (!data || !aluno) {
     alert("Preencha todos os campos!");
@@ -448,8 +455,8 @@ async function guardarCartela() {
   // 📧 enviar email automático
   emailjs.send("service_hhz5mvm", "template_9t8rspj", {
     nome: aluno,
-    saldo: 4, // por enquanto fixo
-    validade: "60 dias", // por enquanto fixo
+    saldo: saldo,
+    validade: validade,
     to_email: emailAluno
   })
   .then(function(response) {
@@ -467,6 +474,56 @@ async function guardarCartela() {
 
   fecharCartela();
 }
+
+async function obterDadosAluno(nomeAluno) {
+
+  const urlPresencas = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT4MVh3khDwjUuR7GdX5oxB_UfDOE2PJ60YEJ8NHG0bWpwRadpHz2IPAVFVSsgWA67d3YBDFy_in5hD/pub?gid=1429041231&single=true&output=csv";
+  const urlCartelas = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGel0sWWnNu6SlQRgiMMVo4oE9sdRhHGyvB11p7_HmYBHCGTCfk974DLNcXw4HR30tGKR-GMMVpET4/pub?gid=1707649825&single=true&output=csv";
+
+  const [presencasData, cartelasData] = await Promise.all([
+    fetch(urlPresencas).then(r => r.text()),
+    fetch(urlCartelas).then(r => r.text())
+  ]);
+
+  const presencas = presencasData.split("\n").map(r => r.split(","));
+  const cartelas = cartelasData.split("\n").map(r => r.split(","));
+
+  let usadas = 0;
+  let compradas = 0;
+  let validadeFinal = null;
+
+  // presenças
+  presencas.slice(1).forEach(row => {
+    const aluno = row[3]?.trim();
+    if (aluno === nomeAluno) usadas++;
+  });
+
+  // cartelas
+  cartelas.slice(1).forEach(row => {
+    const dataCompra = row[1];
+    const aluno = row[2]?.trim();
+
+    if (aluno === nomeAluno && dataCompra) {
+
+      compradas += 4;
+
+      const data = new Date(dataCompra);
+      const validade = new Date(data);
+      validade.setDate(validade.getDate() + 50);
+
+      if (!validadeFinal || validade > validadeFinal) {
+        validadeFinal = validade;
+      }
+    }
+  });
+
+  return {
+    saldo: compradas - usadas,
+    validade: validadeFinal
+  };
+}
+
+
 
 
 async function buscarEmailAluno(nomeAluno) {
