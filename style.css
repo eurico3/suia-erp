@@ -184,3 +184,16 @@
     
     text-align: left;
     }
+
+
+    .btn-whatsapp {
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.btn-whatsapp img {
+  width: 28px;
+  height: 28px;
+}

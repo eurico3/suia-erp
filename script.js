@@ -640,12 +640,14 @@ function carregarVouchers() {
       const div = document.createElement("div");
       div.className = "aluno-item";
 
-      div.innerHTML = `
-        <span>${nome}</span>
-        <strong>${saldo} aulas</strong>
-        <div style="font-size: 12px; color: gray;">${status}</div>
-        <button onclick="clicarWhatsApp('${nome}', ${saldo})">📲 WhatsApp</button>
-      `;
+    div.innerHTML = `
+      <span>${nome}</span>
+      <strong>${saldo} aulas</strong>
+      <div style="font-size: 12px; color: gray;">${status}</div>
+      <button class="btn-whatsapp" onclick="clicarWhatsApp('${nome}', ${saldo})">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" />
+      </button>
+    `;
 
       container.appendChild(div);
     });
