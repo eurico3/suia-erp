@@ -574,15 +574,20 @@ function carregarVouchers() {
 
     const usadas = {};
     const compradas = {};
+    const statusWhatsApp = {};
 
-    // 🟢 CONTAR AULAS USADAS (presenças)
+    // 🟢 CONTAR AULAS USADAS + STATUS WHATSAPP
     presencas.slice(1).forEach(row => {
       const aluno = row[3]?.replace(/\r/g, "").trim();
+      const whatsapp = row[4]?.replace(/\r/g, "").trim();
 
       if (!aluno) return;
 
       if (!usadas[aluno]) usadas[aluno] = 0;
       usadas[aluno]++;
+
+      // guarda estado mais recente
+      statusWhatsApp[aluno] = whatsapp;
     });
 
     // 🟢 CONTAR CARTELAS + VALIDADE
@@ -605,7 +610,6 @@ function carregarVouchers() {
 
       compradas[aluno].aulas += 4;
 
-      // mantém a validade mais recente
       if (validade > compradas[aluno].validade) {
         compradas[aluno].validade = validade;
       }
@@ -622,6 +626,7 @@ function carregarVouchers() {
     const hoje = new Date();
 
     alunos.forEach(nome => {
+
       const totalComprado = compradas[nome]?.aulas || 0;
       const totalUsado = usadas[nome] || 0;
       const saldo = totalComprado - totalUsado;
@@ -638,17 +643,33 @@ function carregarVouchers() {
         }
       }
 
+      // 🔴🟢 STATUS WHATSAPP
+      const statusWhats = statusWhatsApp[nome];
+
+      const bola = statusWhats === "sim"
+        ? '<span class="bola verde"></span>'
+        : '<span class="bola vermelha"></span>';
+
       const div = document.createElement("div");
       div.className = "aluno-item";
 
-    div.innerHTML = `
-      <span>${nome}</span>
-      <strong>${saldo} aulas</strong>
-      <div style="font-size: 12px; color: gray;">${status}</div>
-      <button class="btn-whatsapp" onclick="clicarWhatsApp('${nome}', ${saldo})">
-        <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" />
-      </button>
-    `;
+      div.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          
+          <div>
+            <div>${nome} ${bola}</div>
+            <div style="font-size: 12px; color: gray;">${status}</div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:10px;">
+            <strong>${saldo} aulas</strong>
+            <button class="btn-whatsapp" onclick="clicarWhatsApp('${nome}', ${saldo})">
+              <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" />
+            </button>
+          </div>
+
+        </div>
+      `;
 
       container.appendChild(div);
     });
@@ -714,5 +735,20 @@ async function clicarWhatsApp(nome, saldo) {
     ? dados.validade.toLocaleDateString("pt-BR")
     : "—";
 
+  // abre WhatsApp
   abrirWhatsApp(nome, telefone, saldo, validade);
+
+  const hoje = new Date().toLocaleDateString("pt-BR");
+
+  fetch("https://script.google.com/macros/s/AKfycbxzZCitXt_dLoKj__U3HRKWWhXgabVYIGLoYdy4vbgJ4i6ysYb8yyzYRILp9ABdVpGMZw/exec", {
+    method: "POST",
+    body: new URLSearchParams({
+      nome: nome,
+      data: hoje
+    })
+  })
+  .then(res => res.text())
+  .then(res => console.log("Resposta script:", res))
+  .catch(err => console.error("Erro script:", err));
+
 }
