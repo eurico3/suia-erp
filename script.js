@@ -646,9 +646,9 @@ function carregarVouchers() {
       // 🔴🟢 STATUS WHATSAPP
       const statusWhats = statusWhatsApp[nome];
 
-      const bola = statusWhats === "sim"
-        ? '<span class="bola verde"></span>'
-        : '<span class="bola vermelha"></span>';
+      const bola = statusWhats === "não"
+        ? '<span class="bola vermelha"></span>'
+        : '<span class="bola verde"></span>';
 
       const div = document.createElement("div");
       div.className = "aluno-item";
