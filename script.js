@@ -644,10 +644,68 @@ function carregarVouchers() {
         <span>${nome}</span>
         <strong>${saldo} aulas</strong>
         <div style="font-size: 12px; color: gray;">${status}</div>
+        <button onclick="clicarWhatsApp('${nome}', ${saldo})">📲 WhatsApp</button>
       `;
 
       container.appendChild(div);
     });
 
   });
+}
+
+
+
+async function buscarTelefoneAluno(nomeAluno) {
+  const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=";
+
+  const data = await fetch(url).then(r => r.text());
+  const rows = data.split("\n").map(r => r.split(","));
+
+  for (let i = 1; i < rows.length; i++) {
+    const nome = rows[i][1]?.trim();
+    const telefone = rows[i][2]?.trim();
+
+    if (nome === nomeAluno) {
+      return telefone;
+    }
+  }
+
+  return null;
+}
+
+
+function abrirWhatsApp(aluno, telefone, saldo, validade) {
+
+  if (!telefone) {
+    alert("Aluno sem telefone cadastrado!");
+    return;
+  }
+
+  const mensagem = `Olá ${aluno},
+
+Sua presença foi confirmada 🏺
+
+Saldo atual: ${saldo} aulas
+Validade: ${validade}
+
+Até a próxima 🙂
+Suia Studio`;
+
+  const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+
+  window.open(url, "_blank");
+}
+
+
+async function clicarWhatsApp(nome, saldo) {
+
+  const telefone = await buscarTelefoneAluno(nome);
+
+  const dados = await obterDadosAluno(nome);
+
+  const validade = dados.validade
+    ? dados.validade.toLocaleDateString("pt-BR")
+    : "—";
+
+  abrirWhatsApp(nome, telefone, saldo, validade);
 }
