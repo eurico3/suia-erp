@@ -655,13 +655,17 @@ function carregarVouchers() {
   });
 }
 
-
+function formatarTelefone(telefone) {
+  return "55" + telefone.replace(/\D/g, "");
+}
 
 async function buscarTelefoneAluno(nomeAluno) {
   const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYxduuWfBf_F6cvcrdeF_4Dq0ycEhXDYP4cdtIuAzxYdn3hKa4VWYvQxvArETQckJ54dClZUe6oZnp/pub?output=csv&t=";
 
   const data = await fetch(url).then(r => r.text());
   const rows = data.split("\n").map(r => r.split(","));
+
+  
 
   for (let i = 1; i < rows.length; i++) {
     const nome = rows[i][1]?.trim();
@@ -692,8 +696,8 @@ Validade: ${validade}
 
 Até a próxima 🙂
 Suia Studio`;
-
-  const url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+  const telefoneFormatado = formatarTelefone(telefone);
+  const url = `https://wa.me/${telefoneFormatado}?text=${encodeURIComponent(mensagem)}`;
 
   window.open(url, "_blank");
 }
