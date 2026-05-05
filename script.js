@@ -122,6 +122,7 @@ checkboxes.forEach(cb => {
     formData.append("entry.6897522", dataFormatada);
     formData.append("entry.87385591", horaFormatada);
     formData.append("entry.2044052258", nome);
+    formData.append("entry.551017303", "não");
 
     fetch(url, {
     method: "POST",
