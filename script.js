@@ -740,7 +740,7 @@ async function clicarWhatsApp(nome, saldo) {
 
   const hoje = new Date().toLocaleDateString("pt-BR");
 
-  fetch("https://script.google.com/macros/s/AKfycbxzZCitXt_dLoKj__U3HRKWWhXgabVYIGLoYdy4vbgJ4i6ysYb8yyzYRILp9ABdVpGMZw/exec", {
+  fetch("https://script.google.com/macros/s/AKfycby9gQ1jua5lgOVs3RBMQPdHyxbNDQpQZ2Q-XevvZrsSZeXoGb9FKqUUOhlz1LVu7Nj3sQ/exec", {
     method: "POST",
     body: new URLSearchParams({
       nome: nome,
@@ -748,7 +748,7 @@ async function clicarWhatsApp(nome, saldo) {
     })
   })
   .then(res => res.text())
-  .then(res => console.log("Resposta script:", res))
-  .catch(err => console.error("Erro script:", err));
+  .then(res => alert("Resposta: " + res))
+  .catch(err => alert("Erro: " + err));
 
 }
